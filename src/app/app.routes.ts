@@ -13,5 +13,9 @@ export const routes: Routes = [
   {
     path: 'employees/:id',
     loadChildren: () => import('./features/employee-details/employee-details.routes').then(m => m.EMPLOYEE_DETAILS_ROUTES),
+  },
+  {
+    path: '**',
+    redirectTo: 'employees',
   }
 ];
