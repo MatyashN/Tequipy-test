@@ -57,11 +57,16 @@ export class EmployeeService {
 
   private _changeEmployee(id: string, data: Partial<Employee>): Employee | null {
     const loadedEmployees = this._employees();
-    if (loadedEmployees === null) return null;
+    if (loadedEmployees === null || loadedEmployees.length === 0) return null;
+
     const employeeIndex = loadedEmployees.findIndex(e => e.id === id);
     if (employeeIndex === -1) return null;
+
     const updatedEmployee: Employee = {...loadedEmployees[employeeIndex], ...data};
-    loadedEmployees.splice(employeeIndex, 1, updatedEmployee);
+    const cloneLoadedEmployees = [...loadedEmployees];
+    cloneLoadedEmployees.splice(employeeIndex, 1, updatedEmployee);
+    this._employees.set(cloneLoadedEmployees);
+
     return updatedEmployee;
   }
 }
