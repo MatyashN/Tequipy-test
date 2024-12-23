@@ -1,0 +1,23 @@
+<a mat-button routerLink="..">< back</a>
+
+@if (employeeDetails.value(); as details) {
+  <app-page-header>
+    <h2>{{ details.name }}</h2>
+    @if (details.status === statuses.ACTIVE) {
+      <button mat-flat-button (click)="offBoardHandler()">Offboard</button>
+    } @else {
+      <span>DONE</span>
+    }
+  </app-page-header>
+
+  <h4 class="employee-details__part-header">Employee Details</h4>
+
+  <app-details [employee]="details"/>
+
+  <h4 class="employee-details__part-header">Equipments</h4>
+
+  <app-equipments-list [equipments]="details.equipments"/>
+
+} @else {
+  <p>Loading...</p>
+}

@@ -1,0 +1,7 @@
+@use '@angular/material' as mat;
+
+.mdc-button.orange {
+  @include mat.button-overrides((
+    filled-container-color: orange,
+  ));
+}

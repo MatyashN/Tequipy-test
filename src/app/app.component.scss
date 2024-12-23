@@ -1,0 +1,24 @@
+@use '@angular/material' as mat;
+
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 100%;
+  align-items: center;
+
+  .root {
+    &__content-container {
+      width: 100%;
+      max-width: 90%;
+      padding: 24px;
+    }
+  }
+
+  mat-toolbar {
+    @include mat.toolbar-overrides((
+      container-background-color: orange,
+      container-text-color: white,
+    ));
+  }
+}
+

@@ -1,0 +1,11 @@
+@if (isFetching() && !error()) {
+  <p>Loading...</p>
+} @else if (error()) {
+  <p>{{ error() }}</p>
+} @else {
+  <app-page-header>
+    <h2>Employees</h2>
+    <app-filter-panel (applyFilter)="filters.set($event)"/>
+  </app-page-header>
+  <app-employees-table [employees]="employees()"/>
+}

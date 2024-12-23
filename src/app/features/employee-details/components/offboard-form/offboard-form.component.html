@@ -1,0 +1,76 @@
+<h2 mat-dialog-title>Offboard - {{ data.name }}</h2>
+<mat-dialog-content>
+  <form [formGroup]="form">
+
+    <mat-form-field appearance="outline" class="receiver">
+      <mat-label>Receiver</mat-label>
+      <input matInput formControlName="receiver">
+      @if (getFirstErrorMessage(form, 'receiver'); as errMsg) {
+        <mat-error>{{ errMsg }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="email">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email">
+      @if (getFirstErrorMessage(form, 'email'); as errMsg) {
+        <mat-error>{{ errMsg }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="phone">
+      <mat-label>Phone</mat-label>
+      <input matInput formControlName="phone">
+      @if (getFirstErrorMessage(form, 'phone'); as errMsg) {
+        <mat-error>{{ errMsg }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="streetLine">
+      <mat-label>Street line</mat-label>
+      <input matInput formControlName="streetLine">
+      @if (getFirstErrorMessage(form, 'streetLine'); as errMsg) {
+        <mat-error>{{ errMsg }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="city">
+      <mat-label>City</mat-label>
+      <input matInput formControlName="city">
+      @if (getFirstErrorMessage(form, 'city'); as errMsg) {
+        <mat-error>{{ errMsg }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="postalCode">
+      <mat-label>Postal code</mat-label>
+      <input matInput formControlName="postalCode">
+      @if (getFirstErrorMessage(form, 'postalCode'); as errMsg) {
+        <mat-error>{{ errMsg }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="country">
+      <mat-label>Country</mat-label>
+      <input matInput formControlName="country">
+      @if (getFirstErrorMessage(form, 'country'); as errMsg) {
+        <mat-error>{{ errMsg }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="notes">
+      <mat-label>Notes</mat-label>
+      <textarea matInput formControlName="notes"></textarea>
+      @if (getFirstErrorMessage(form, 'notes'); as errMsg) {
+        <mat-error>{{ errMsg }}</mat-error>
+      }
+    </mat-form-field>
+
+  </form>
+
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button (click)="cancelClick()">Cancel</button>
+  <button mat-button [disabled]="form.invalid" [mat-dialog-close]="form.value">Ok</button>
+</mat-dialog-actions>

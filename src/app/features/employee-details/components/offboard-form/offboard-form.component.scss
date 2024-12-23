@@ -1,0 +1,52 @@
+@use '@angular/material' as mat;
+
+:host {
+  form {
+    display: grid;
+    grid-template-columns: auto auto;
+    column-gap: 1rem;
+    row-gap: 0.3rem;
+    grid-template-areas:
+    "receiver receiver"
+    "email email"
+    "phone phone"
+    "streetLine streetLine"
+    "city postalCode"
+    "country country"
+    "notes notes";
+
+    padding-top: 12px;
+
+    .receiver {
+      grid-area: receiver;
+    }
+
+    .email {
+      grid-area: email;
+    }
+
+    .phone {
+      grid-area: phone;
+    }
+
+    .streetLine {
+      grid-area: streetLine;
+    }
+
+    .city {
+      grid-area: city;
+    }
+
+    .postalCode {
+      grid-area: postalCode;
+    }
+
+    .country {
+      grid-area: country;
+    }
+
+    .notes {
+      grid-area: notes;
+    }
+  }
+}
