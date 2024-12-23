@@ -11,8 +11,8 @@ import { MatButton } from '@angular/material/button';
 import { Employee } from '../../../../core/models/employee';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatInput } from '@angular/material/input';
-import { NgTemplateOutlet } from '@angular/common';
 import { getFirstErrorMessage } from '../../../../utils/helpers';
+import { errorMessages } from './errors-messages';
 
 @Component({
   selector: 'app-offboard-form',
@@ -80,7 +80,9 @@ export class OffboardFormComponent {
     ])
   });
 
-  readonly getFirstErrorMessage = getFirstErrorMessage;
+  getFirstErrorMessage(form: FormGroup, controlName: string) {
+    return getFirstErrorMessage(form, controlName, errorMessages);
+  }
 
   cancelClick(): void {
     this.dialogRef.close();
