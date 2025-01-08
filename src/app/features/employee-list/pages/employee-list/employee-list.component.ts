@@ -1,9 +1,8 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { TableComponent } from '../../components/table/table.component';
-import { EmployeeService } from '../../../../core/services/employee.service';
 import { FilterPanelComponent } from '../../components/filter-panel/filter-panel.component';
-import { Employee } from '../../../../core/models/employee';
 import { PageHeaderComponent } from '../../../../shared/components/page-header/page-header.component';
+import { EmployeesStore } from '../../store/employees.store';
 
 @Component({
   selector: 'app-employee-list',
@@ -16,38 +15,20 @@ import { PageHeaderComponent } from '../../../../shared/components/page-header/p
   standalone: true,
   styleUrl: './employee-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [EmployeesStore],
 })
 export class EmployeeListComponent implements OnInit {
-
-  private _destroyRef = inject(DestroyRef);
-  private _employeeService: EmployeeService = inject(EmployeeService);
-
-  filters = signal<string>('')
-  employees = computed(() => {
-    let filterQuery = this.filters();
-    let employees: Employee[] = this._employeeService.loadedEmployees() || [];
-
-    return employees.filter(employee => {
-      return employee.name.toLowerCase().indexOf(filterQuery.toLowerCase()) !== -1;
-    });
-  });
-  isFetching = signal<boolean>(false);
-  error = signal<string>('');
+  readonly store = inject(EmployeesStore);
 
   ngOnInit() {
-    this.isFetching.set(true);
+    this._startInitialLogic();
+  }
 
-    const subscription = this._employeeService.getEmployees().subscribe({
-      error: (e) => {
-        this.error.set(e.message);
-      },
-      complete: () => {
-        this.isFetching.set(false);
-      }
-    })
+  private _startInitialLogic() {
+    const query = this.store.filter;
 
-    this._destroyRef.onDestroy(() => {
-      subscription.unsubscribe();
+    this.store.loadAllEmployees().then(() => {
+      this.store.loadByQuery(query);
     })
   }
 

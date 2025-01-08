@@ -5,8 +5,31 @@ import { EmployeeStatuses } from '../models/employee-statuses';
 
 export const mockBackendInterceptor: HttpInterceptorFn = (req, next) => {
 
-  if (req.url.endsWith('/api/employees') && req.method === 'GET') {
-    const response = new HttpResponse({status: 200, body: usersListMock});
+  const getDeepClone = <T>(data: T): T => {
+    return JSON.parse(JSON.stringify(data));
+  }
+
+  const employeesUrlMatch = req.url.match(/^\/api\/employees(\?query=[^&]*)?$/);
+
+  if (employeesUrlMatch && req.method === 'GET') {
+
+    const queryParams: { [key: string]: string } = {};
+
+    if (req.url.includes('?')) {
+      const queryString = req.urlWithParams.split('?')[1];
+      queryString.split('&').forEach((param) => {
+        const [key, value] = param.split('=');
+        queryParams[key] = decodeURIComponent(value || '');
+      });
+    }
+
+    const {query} = queryParams;
+    const response = new HttpResponse({
+      status: 200, body: query ?
+        getDeepClone<Employee[]>(usersListMock).filter(u => {
+          return u.name.toLowerCase().indexOf(query.toLowerCase()) !== -1;
+        }) : getDeepClone<Employee[]>(usersListMock)
+    });
 
     return of(response).pipe(
       delay(500),
@@ -18,7 +41,7 @@ export const mockBackendInterceptor: HttpInterceptorFn = (req, next) => {
 
   if (employeeIdMatch && req.method === 'GET') {
     const employeeId = employeeIdMatch[1];
-    const employee: Employee | undefined = usersListMock.find((_employee: Employee) => _employee.id === employeeId);
+    const employee: Employee | undefined = getDeepClone<Employee[]>(usersListMock).find((_employee: Employee) => _employee.id === employeeId);
     if (employee) {
       return of(new HttpResponse({status: 200, body: employee})).pipe(
         delay(500),
@@ -37,7 +60,13 @@ export const mockBackendInterceptor: HttpInterceptorFn = (req, next) => {
     if (employeeIndex !== -1) {
       const employee = usersListMock[employeeIndex];
       employee.status = EmployeeStatuses.OFF_BOARDED;
-      return of(new HttpResponse({status: 200, body: {...employee}})).pipe(
+
+      // return of(null).pipe(
+      //   delay(1000),
+      //   switchMap(() => throwError(() => new Error('Oooppps...')))
+      // );
+
+      return of(new HttpResponse({status: 200, body: {...getDeepClone<Employee>(employee)}})).pipe(
         delay(500),
         tap(() => console.log(`/api/users/${employeeId}/offboard`)),
       );

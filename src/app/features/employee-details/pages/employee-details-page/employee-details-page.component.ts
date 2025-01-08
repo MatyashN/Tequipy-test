@@ -1,15 +1,15 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, input, InputSignal, resource } from '@angular/core';
-import { EmployeeService } from '../../../../core/services/employee.service';
-import { firstValueFrom, of, switchMap } from 'rxjs';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, input, InputSignal, OnInit } from '@angular/core';
 import { PageHeaderComponent } from '../../../../shared/components/page-header/page-header.component';
 import { DetailsComponent } from '../../components/details/details.component';
 import { EquipmentsListComponent } from '../../components/equipments-list/equipments-list.component';
 import { MatAnchor, MatButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import { OffboardFormComponent } from '../../components/offboard-form/offboard-form.component';
-import { Employee } from '../../../../core/models/employee';
 import { EmployeeStatuses } from '../../../../core/models/employee-statuses';
 import { RouterLink } from '@angular/router';
+import { EmployeeDetailsStore } from '../../store/employee-details.store';
+import { OffboardFormComponent } from '../../components/offboard-form/offboard-form.component';
+import { of, switchMap } from 'rxjs';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-employee-details-page',
@@ -20,48 +20,42 @@ import { RouterLink } from '@angular/router';
     MatButton,
     MatAnchor,
     RouterLink,
+    MatProgressSpinnerModule,
   ],
   templateUrl: './employee-details-page.component.html',
   standalone: true,
   styleUrl: './employee-details-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [EmployeeDetailsStore],
 })
-export class EmployeeDetailsPageComponent {
-  private readonly _employeeService: EmployeeService = inject(EmployeeService);
+export class EmployeeDetailsPageComponent implements OnInit {
+  readonly store = inject(EmployeeDetailsStore);
   private readonly _dialog = inject(MatDialog);
   private readonly _destroyRef = inject(DestroyRef);
   readonly statuses = EmployeeStatuses;
 
   id: InputSignal<string> = input.required();
-  employeeDetails = resource({
-    request: () => {
-      return {id: this.id()};
-    },
-    loader: ({request}) => {
-      return firstValueFrom(this._employeeService.getEmployeeById(request.id));
-    }
-  })
+
+  ngOnInit() {
+    this.store.loadEmployee(this.id);
+  }
 
   offBoardHandler() {
     const dialogRef = this._dialog.open(OffboardFormComponent, {
-      data: this.employeeDetails.value(),
+      data: this.store.employee(),
     });
+
+    debugger
 
     const afterCloseSubscription = dialogRef.afterClosed().pipe(
       switchMap(result => {
         if (result) {
-          return this._employeeService.offBoard(this.id(), result)
+          return this.store.offBoardEmployee(result)
         } else {
           return of(result);
         }
       })
-    ).subscribe({
-      next: (data: Employee) => {
-        if (data) {
-          this.employeeDetails.set(data);
-        }
-      }
-    })
+    ).subscribe()
 
     this._destroyRef.onDestroy(() => afterCloseSubscription.unsubscribe());
   }

@@ -1,4 +1,11 @@
 :host {
+  position: relative;
+
+  mat-progress-bar {
+    position: absolute;
+    top: 0;
+  }
+
   [mat-row] {
     cursor: pointer;
   }

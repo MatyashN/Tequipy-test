@@ -1,6 +1,12 @@
-<a mat-button routerLink="..">< back</a>
+<div [style.display]="'flex'">
+  <a mat-button routerLink="..">< back</a>
 
-@if (employeeDetails.value(); as details) {
+  @if (store.loading()) {
+    <mat-spinner [diameter]="24"></mat-spinner>
+  }
+</div>
+
+@if (store.employee(); as details) {
   <app-page-header>
     <h2>{{ details.name }}</h2>
     @if (details.status === statuses.ACTIVE) {
@@ -8,6 +14,7 @@
     } @else {
       <span>DONE</span>
     }
+
   </app-page-header>
 
   <h4 class="employee-details__part-header">Employee Details</h4>

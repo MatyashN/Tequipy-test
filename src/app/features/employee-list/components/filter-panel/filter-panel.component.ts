@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, output, OutputEmitterRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
+import { EmployeesStore } from '../../store/employees.store';
 
 @Component({
   selector: 'app-filter-panel',
@@ -15,9 +16,9 @@ import { MatInput } from '@angular/material/input';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FilterPanelComponent {
-  applyFilter: OutputEmitterRef<string> = output()
+  readonly store = inject(EmployeesStore);
 
   keyupHandler(event: Event): void {
-    this.applyFilter.emit((<HTMLInputElement>event.target).value);
+    this.store.updateFilter((<HTMLInputElement>event.target).value);
   }
 }

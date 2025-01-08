@@ -5,11 +5,12 @@ import { MatSortModule, Sort } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { compare } from '../../../../utils/helpers';
 import { RouterLink } from '@angular/router';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @Component({
   selector: 'app-employees-table',
   imports: [
-    MatTableModule, MatSortModule, JoinNamesPipe, RouterLink
+    MatTableModule, MatSortModule, JoinNamesPipe, RouterLink, MatProgressBarModule
   ],
   templateUrl: './table.component.html',
   standalone: true,
@@ -18,6 +19,7 @@ import { RouterLink } from '@angular/router';
 })
 export class TableComponent {
   employees: InputSignal<Employee[]> = input.required();
+  isLoading: InputSignal<boolean> = input.required();
   sort = signal<Sort | null>(null);
   dataSource = computed(() => {
     const employees = [...this.employees()];
