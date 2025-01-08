@@ -1,10 +1,16 @@
-<a mat-button routerLink="..">< back</a>
+<div [style.display]="'flex'">
+  <a mat-button routerLink="..">< back</a>
+  <a mat-button routerLink="../emp002">next</a>
+  @if (isLoading()) {
+    <mat-spinner [diameter]="24"></mat-spinner>
+  }
+</div>
 
-@if (employeeDetails.value(); as details) {
+@if (employeeDetails(); as details) {
   <app-page-header>
     <h2>{{ details.name }}</h2>
     @if (details.status === statuses.ACTIVE) {
-      <button mat-flat-button (click)="offBoardHandler()">Offboard</button>
+      <button mat-flat-button [disabled]="isLoading()" (click)="offBoardHandler()">Offboard</button>
     } @else {
       <span>DONE</span>
     }

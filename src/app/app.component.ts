@@ -15,5 +15,4 @@ import { MatToolbar } from '@angular/material/toolbar';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
-  title = 'offboarding';
 }

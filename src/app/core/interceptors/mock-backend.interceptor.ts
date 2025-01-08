@@ -5,8 +5,12 @@ import { EmployeeStatuses } from '../models/employee-statuses';
 
 export const mockBackendInterceptor: HttpInterceptorFn = (req, next) => {
 
+  const getDeepClone = <T>(data: T): T => {
+    return JSON.parse(JSON.stringify(data));
+  }
+
   if (req.url.endsWith('/api/employees') && req.method === 'GET') {
-    const response = new HttpResponse({status: 200, body: usersListMock});
+    const response = new HttpResponse({status: 200, body: getDeepClone(usersListMock)});
 
     return of(response).pipe(
       delay(500),
@@ -20,7 +24,7 @@ export const mockBackendInterceptor: HttpInterceptorFn = (req, next) => {
     const employeeId = employeeIdMatch[1];
     const employee: Employee | undefined = usersListMock.find((_employee: Employee) => _employee.id === employeeId);
     if (employee) {
-      return of(new HttpResponse({status: 200, body: employee})).pipe(
+      return of(new HttpResponse({status: 200, body: getDeepClone(employee)})).pipe(
         delay(500),
         tap(() => console.log(`/api/employees/${employeeId}`)),
       );
@@ -30,14 +34,13 @@ export const mockBackendInterceptor: HttpInterceptorFn = (req, next) => {
   }
 
   const offBoardEmployeeIdMatch = req.url.match(/\/api\/users\/([a-zA-Z0-9_-]+)\/offboard$/);
-
   if (offBoardEmployeeIdMatch && req.method === 'POST') {
     const employeeId = offBoardEmployeeIdMatch[1];
     const employeeIndex = usersListMock.findIndex((_employee: Employee) => _employee.id === employeeId);
     if (employeeIndex !== -1) {
       const employee = usersListMock[employeeIndex];
       employee.status = EmployeeStatuses.OFF_BOARDED;
-      return of(new HttpResponse({status: 200, body: {...employee}})).pipe(
+      return of(new HttpResponse({status: 200, body: {...getDeepClone(employee)}})).pipe(
         delay(500),
         tap(() => console.log(`/api/users/${employeeId}/offboard`)),
       );
