@@ -45,8 +45,6 @@ export class EmployeeDetailsPageComponent implements OnInit {
       data: this.store.employee(),
     });
 
-    debugger
-
     const afterCloseSubscription = dialogRef.afterClosed().pipe(
       switchMap(result => {
         if (result) {
