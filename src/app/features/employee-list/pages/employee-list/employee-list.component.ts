@@ -3,7 +3,7 @@ import { TableComponent } from '../../components/table/table.component';
 import { FilterPanelComponent } from '../../components/filter-panel/filter-panel.component';
 import { Employee } from '../../../../core/models/employee';
 import { PageHeaderComponent } from '../../../../shared/components/page-header/page-header.component';
-import * as Actions from '../../../../store/employees.actions'
+import * as employeesActions from '../../../../store/employees.actions'
 import { Store } from '@ngrx/store';
 import {
   selectAllEmployees,
@@ -40,7 +40,7 @@ export class EmployeeListComponent implements OnInit {
   });
 
   ngOnInit() {
-    this._store.dispatch(Actions.loadEmployees())
+    this._store.dispatch(employeesActions.loadEmployees())
   }
 
 }
