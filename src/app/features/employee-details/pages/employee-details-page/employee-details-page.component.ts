@@ -19,7 +19,7 @@ import { EmployeeStatuses } from '../../../../core/models/employee-statuses';
 import { RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { selectEmployeeById, selectEmployeesIsLoading } from '../../../../store/employees.selectors';
-import * as employeesActions from '../../../../store/employees.actions'
+import * as EmployeesActions from '../../../../store/employees.actions'
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
@@ -57,12 +57,12 @@ export class EmployeeDetailsPageComponent implements OnDestroy {
 
   constructor() {
     effect(() => {
-      this._store.dispatch(employeesActions.setSelectedEmployeeId({id: this.id()}));
+      this._store.dispatch(EmployeesActions.setSelectedEmployeeId({id: this.id()}));
     });
   }
 
   ngOnDestroy() {
-    this._store.dispatch(employeesActions.removeSelectedEmployeeId());
+    this._store.dispatch(EmployeesActions.removeSelectedEmployeeId());
   }
 
   offBoardHandler() {
@@ -73,7 +73,7 @@ export class EmployeeDetailsPageComponent implements OnDestroy {
     const afterCloseSubscription = dialogRef.afterClosed().subscribe({
       next: result => {
         if (result) {
-          this._store.dispatch(employeesActions.offBoardEmployee({id: this.id(), offBoardData: result}))
+          this._store.dispatch(EmployeesActions.offBoardEmployee({id: this.id(), offBoardData: result}))
         }
       }
     })
